@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Closer Staging</string>
+    <!-- <string name="app_name">Closer</string> -->
+    <!-- <string name="CLEVERTAP_ACCOUNT_ID">W67-K58-696A</string>
+     <string name="CLEVERTAP_TOKEN">b53-a61</string> -->
+    <!-- below one production id -->
+        <string name="CLEVERTAP_ACCOUNT_ID">W67-K58-696Z</string>
+ <string name="CLEVERTAP_TOKEN">b53-a60</string>
+<string name="CLEVERTAP_USE_GOOGLE_AD_ID">1</string>
+<string name="CLEVERTAP_REGION">eu1</string>
+
+</resources>

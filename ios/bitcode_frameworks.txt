@@ -1,0 +1,16 @@
+Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64_x86_64-maccatalyst/hermes.framework/hermes
+Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64/hermes.framework/hermes
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64/FirebaseAnalytics.framework/FirebaseAnalytics
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/macos-arm64_x86_64/FirebaseAnalytics.framework/FirebaseAnalytics
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-maccatalyst/FirebaseAnalytics.framework/FirebaseAnalytics
+Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64_x86_64-maccatalyst/hermes.framework/hermes
+./Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64/hermes.framework/hermes
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/tvos-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/macos-arm64_x86_64/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-simulator/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64_x86_64-maccatalyst/FirebaseAnalytics.framework/FirebaseAnalytics
+./Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.xcframework/ios-arm64/FirebaseAnalytics.framework/FirebaseAnalytics

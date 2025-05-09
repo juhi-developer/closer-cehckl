@@ -1,0 +1,154 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, 13.0
+prepare_react_native_project!
+
+
+ def node_require(script)
+   # Resolve script with node to allow for hoisting
+   require Pod::Executable.execute_command('node', ['-p',
+     "require.resolve(
+       '#{script}',
+       {paths: [process.argv[1]]},
+     )", __dir__]).strip
+ end
+
+ node_require('react-native/scripts/react_native_pods.rb')
+ node_require('react-native-permissions/scripts/setup.rb')
+
+
+ setup_permissions([
+  # 'AppTrackingTransparency',
+  # 'Bluetooth',
+  # 'Calendars',
+  # 'CalendarsWriteOnly',
+   'Camera',
+  # 'Contacts',
+  # 'FaceID',
+  # 'LocationAccuracy',
+  # 'LocationAlways',
+  # 'LocationWhenInUse',
+   # 'MediaLibrary',
+  # 'Microphone',
+  # 'Motion',
+  # 'Notifications',
+   'PhotoLibrary',
+  # 'PhotoLibraryAddOnly',
+  # 'Reminders',
+  # 'Siri',
+  # 'SpeechRecognition',
+  # 'StoreKit',
+])
+
+
+# Use static frameworks
+use_frameworks! :linkage => :static
+use_modular_headers!
+
+
+
+# linkage = ENV['USE_FRAMEWORKS']
+# if linkage != nil
+#   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+#   use_frameworks! :linkage => linkage.to_sym
+# end
+
+target 'closer' do
+  
+  config = use_native_modules!
+
+  # React Native dependencies
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :hermes_enabled => true,
+    :fabric_enabled => get_default_flags[:fabric_enabled],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+
+  pod 'Sodium', :modular_headers => true # Sodium with modular headers
+  pod 'AWSS3', :modular_headers => true # AWS with modular headers
+  pod 'AWSCore', :modular_headers => true
+  pod 'AWSMobileClient',  :modular_headers => false
+  
+  pod 'AWSCognito', :modular_headers => true
+  pod 'AWSPinpoint', :modular_headers => true
+  pod 'AWSAuthCore', :modular_headers => true
+  pod 'AWSCognitoIdentityProvider', :modular_headers => true
+  pod 'AWSCognitoIdentityProviderASF', :modular_headers => true
+  pod 'GoogleDataTransport', :modular_headers => true
+
+  # Add the other non-AWS, non-Sodium dependencies here
+  pod 'SDWebImage', :modular_headers => true
+  pod 'SDWebImageWebPCoder', :modular_headers => true
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'FirebaseInstallations', :modular_headers => true
+  pod 'nanopb', :modular_headers => true
+  pod 'SRSRadialGradient', :path => '../node_modules/react-native-radial-gradient/ios'
+  pod 'clevertap-react-native', :path => '../node_modules/clevertap-react-native'
+  #pod 'CleverTap-iOS-SDK'
+  pod 'CleverTap-iOS-SDK', :modular_headers => true
+
+  
+  target 'closerTests' do
+    inherit! :complete
+  end
+
+  target 'NotifcationServiceCenter' do
+
+     pod 'CleverTap-iOS-SDK'
+    pod 'clevertap-react-native', :path => '../node_modules/clevertap-react-native'
+  end
+
+post_install do |installer|
+  react_native_post_install(installer)
+  __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+  # Set Swift version for AWS pods
+  installer.pods_project.targets.each do |target|
+    # if ['AWSMobileClient', 'AWSCore', 'AWSS3', 'AWSCognito', 'AWSPinpoint', 'AWSAuthCore', 'AWSCognitoIdentityProvider', 'AWSCognitoIdentityProviderASF'].include? target.name
+    #   target.build_configurations.each do |config|
+    #     config.build_settings['SWIFT_VERSION'] = '5.0'
+    #   end
+    # end
+    # Set for other pods as well, if necessary
+    bitcode_strip_path = `xcrun --find bitcode_strip`.chop!
+    def strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
+      framework_path = File.join(Dir.pwd, framework_relative_path)
+      command = "#{bitcode_strip_path} #{framework_path} -r -o #{framework_path}"
+      puts "Stripping bitcode: #{command}"
+      system(command)
+    end
+ 
+    framework_paths = [
+      "Pods/LogRocket/LogRocket.xcframework/ios-arm64/LogRocket.framework/LogRocket",
+      "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/hermes",
+      "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/Versions/Current/hermes",
+      "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64/hermes.framework/hermes",
+      "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64_x86_64-maccatalyst/hermes.framework/hermes"
+    ]
+ 
+    framework_paths.each do |framework_relative_path|
+      strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
+    end
+    
+    target.build_configurations.each do |config|
+      if target.name == 'Sentry'
+        config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'YES'
+      else
+      config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      target.build_settings(config.name)['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      # Ensure proper architecture settings
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
+  end
+  end
+end
+end
